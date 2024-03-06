@@ -9,8 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,14 +25,13 @@ public class Person {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-
-  @NotBlank(message = "O nome é obrigatório!")
+  
+  @Column(nullable = false)
   private String name;
 
-  @Past(message = "Não pode haver datas futuras")
+  @Column(nullable = false)
   private LocalDate birthDate;
 
-  @Column(unique = true)
-  @NotBlank(message = "O CPF é obrigatório!")
+  @Column(unique = true, nullable = false)
   private String cpf;
 }
