@@ -37,7 +37,7 @@ public class Person {
   @Column(nullable = false)
   private LocalDate birthDate;
 
-  @Column(unique = true, nullable = false)
+  @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(11)")
   private String cpf;
 
   @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
