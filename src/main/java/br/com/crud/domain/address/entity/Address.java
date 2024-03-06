@@ -1,11 +1,16 @@
 package br.com.crud.domain.address.entity;
 
+import java.util.UUID;
+
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.person.entity.Person;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,6 +24,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
+  
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
   
   @Column(nullable = false)
   private String street;
