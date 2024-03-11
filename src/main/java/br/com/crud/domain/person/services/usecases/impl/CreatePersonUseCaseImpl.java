@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.crud.domain._exceptions.CpfAlreadyExistsException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
@@ -24,11 +25,19 @@ public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
   @Override
   public Person execute(Person person) {
 
+    verifyIfCpfExists(person.getCpf());
+
     Person savedPerson = savePerson(person);
 
     saveAddresses(person.getAddresses(), savedPerson);
 
     return savedPerson;
+  }
+
+  private void verifyIfCpfExists(String cpf) {
+    personRepository.findPersonByCpf(cpf).ifPresent((person)->{
+      throw new CpfAlreadyExistsException("Already exists a person registered with this CPF");
+    });
   }
 
   private Person savePerson(Person person) {
