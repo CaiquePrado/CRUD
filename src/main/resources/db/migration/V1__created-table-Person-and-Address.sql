@@ -1,7 +1,7 @@
 CREATE TABLE tb_person (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    birthDate DATE NOT NULL,
+    birth_date DATE NOT NULL,
     cpf VARCHAR(11) NOT NULL,
     UNIQUE(cpf)
 );
