@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,21 @@ public class PersonRepositoryTest {
   @Autowired
   AddressRepository addressRepository;
 
+  Person person;
+  Address address;
+  List<Address> addresses;
+
+  @BeforeEach
+  void setup(){
+    addresses = new ArrayList<>();
+    person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
+    address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    person.getAddresses().add(address);
+  }
+
   @DisplayName("Given Person OBject When Save Should Return Saved Person")
   @Test
   void testGivenPersonOBject_WhenSave_ShouldReturnSavedPerson() {
-
-    List<Address> addresses = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
-    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
 
     Person savedPerson = personRepository.save(person);
 
@@ -57,10 +65,6 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPeopleList_WhenFindAll_ShouldReturnPeopleListWithAddresses() {
 
-    List<Address> addressesPerson = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
-    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
     personRepository.save(person);
 
     List<Address> addressesPersonTwo = new ArrayList<>();
@@ -84,10 +88,6 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenFindById_ShouldReturnPersonObject() {
 
-    List<Address> addresses = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
-    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
     personRepository.save(person);
 
     Person savedPerson = personRepository.findById(person.getId()).get();
@@ -101,10 +101,6 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenFindByCpf_ShouldReturnPersonObject() {
 
-    List<Address> addresses = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
-    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
     personRepository.save(person);
 
     Person savedPerson = personRepository.findPersonByCpf(person.getCpf()).get();
@@ -118,10 +114,6 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenUpdatePersonAndAddresses_ShouldReturnPersonAndAddresses() {
   
-    List<Address> addresses = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
-    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
     personRepository.save(person);
 
     Person savedPerson = personRepository.findById(person.getId()).get();
@@ -154,10 +146,6 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenDeletePerson_ShouldReturnRemovePersonAndAddresses() {
   
-    List<Address> addresses = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
-    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
     personRepository.save(person);
 
     person.getAddresses().stream().forEach(addressInAddresses -> addressRepository.deleteById(addressInAddresses.getId()));
