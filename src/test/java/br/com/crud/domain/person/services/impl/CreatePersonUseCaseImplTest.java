@@ -3,9 +3,12 @@ package br.com.crud.domain.person.services.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.crud.domain._exceptions.CpfAlreadyExistsException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
@@ -51,9 +55,9 @@ class CreatePersonUseCaseImplTest {
     person.getAddresses().add(address);
   }
 
-  @DisplayName("Given Person Object when Save Person then Return Person Object")
+  @DisplayName("Given Person Object when Save Person then Return Person and addresses")
   @Test
-  void testGivenPersonObject_WhenSavePerson_ShouldReturnPersonObject() {
+  void testGivenPersonObject_WhenSavePerson_ShouldReturnPersonAndAddresses() {
 
     given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.empty());
     given(personRepository.save(person)).willReturn(person);
@@ -64,5 +68,17 @@ class CreatePersonUseCaseImplTest {
     assertNotNull(savedPerson);
     assertEquals("Test name", savedPerson.getName());
     assertFalse(savedPerson.getAddresses().isEmpty());
+  }
+  
+  @DisplayName("Given Person Object with Existing CPF when Save Person then Throw CpfAlreadyExistsException")
+  @Test
+  void testGivenPersonObjectWithExistingCPF_WhenSavePerson_ShouldThrowCpfAlreadyExistsException() {
+    given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(person));
+
+    assertThrows(CpfAlreadyExistsException.class, () -> {
+      createPersonUseCaseImpl.execute(person);
+    });
+
+    verify(personRepository, never()).save(any(Person.class));
   }
 }
