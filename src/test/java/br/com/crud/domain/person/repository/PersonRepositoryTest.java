@@ -1,6 +1,7 @@
 package br.com.crud.domain.person.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
@@ -48,5 +49,32 @@ public class PersonRepositoryTest {
     assertEquals("Test Neighborhood", address.getNeighborhood());
     assertEquals(State.BAHIA, address.getState());
     assertEquals("12345", address.getZipCode());
+  }
+
+  @DisplayName("Given People List When FindAll Should Return People List with Addresses")
+  @Test
+  void testGivenPeopleList_WhenFindAll_ShouldReturnPeopleListWithAddresses() {
+
+    List<Address> addressesPerson = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
+    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    person.getAddresses().add(address);
+    personRepository.save(person);
+
+    List<Address> addressesPersonTwo = new ArrayList<>();
+    Person personTwo = new Person("Test name", LocalDate.now(), "11111111111", addressesPersonTwo);
+    Address addressTwo = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    personTwo.getAddresses().add(addressTwo);
+    personRepository.save(personTwo);
+
+    List<Person> peopleList = personRepository.findAll();
+
+    assertNotNull(peopleList);
+    assertEquals(2, peopleList.size());
+
+    peopleList.stream().forEach(personInList -> {
+      assertNotNull(personInList.getAddresses());
+      assertFalse(personInList.getAddresses().isEmpty());
+    });
   }
 }
