@@ -24,6 +24,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
+
+  public Address(String street, int number, String neighborhood, State state, String zipCode, Person person) {
+    this.street = street;
+    this.number = number;
+    this.neighborhood = neighborhood;
+    this.state = state;
+    this.zipCode = zipCode;
+    this.person = person;
+  }
   
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

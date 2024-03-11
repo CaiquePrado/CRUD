@@ -26,6 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Person {
+
+  public Person(String name, LocalDate birthDate, String cpf, List<Address> addresses) {
+    this.name = name;
+    this.birthDate = birthDate;
+    this.cpf = cpf;
+    this.addresses = addresses;
+  }
   
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
