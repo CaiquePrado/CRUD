@@ -94,4 +94,21 @@ public class PersonRepositoryTest {
     assertNotNull(savedPerson.getId());
     assertEquals(person.getId(), savedPerson.getId());
   }
+
+  @DisplayName("Given Person Object When FindByCpf Should Return Person Object")
+  @Test
+  void testGivenPersonOBject_WhenFindByCpf_ShouldReturnPersonObject() {
+
+    List<Address> addressesPerson = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
+    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    person.getAddresses().add(address);
+    personRepository.save(person);
+
+    Person savedPerson = personRepository.findPersonByCpf(person.getCpf()).get();
+
+    assertNotNull(savedPerson);
+    assertNotNull(savedPerson.getCpf());
+    assertEquals(person.getCpf(), savedPerson.getCpf());
+  }
 }
