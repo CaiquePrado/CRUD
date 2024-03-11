@@ -3,10 +3,12 @@ package br.com.crud.domain.person.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,8 +84,8 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenFindById_ShouldReturnPersonObject() {
 
-    List<Address> addressesPerson = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
+    List<Address> addresses = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
     Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
     person.getAddresses().add(address);
     personRepository.save(person);
@@ -99,8 +101,8 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenFindByCpf_ShouldReturnPersonObject() {
 
-    List<Address> addressesPerson = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
+    List<Address> addresses = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
     Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
     person.getAddresses().add(address);
     personRepository.save(person);
@@ -116,8 +118,8 @@ public class PersonRepositoryTest {
   @Test
   void testGivenPersonOBject_WhenUpdatePersonAndAddresses_ShouldReturnPersonAndAddresses() {
   
-    List<Address> addressesPerson = new ArrayList<>();
-    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
+    List<Address> addresses = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
     Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
     person.getAddresses().add(address);
     personRepository.save(person);
@@ -146,5 +148,27 @@ public class PersonRepositoryTest {
     assertEquals("Updated Neighborhood", uptadetededAddress.getNeighborhood());
     assertEquals(State.SAO_PAULO, uptadetededAddress.getState());
     assertEquals("54321", uptadetededAddress.getZipCode());
+  }
+
+  @DisplayName("Given Person Object When Delete Person and addresses Should Remove Person and addresses")
+  @Test
+  void testGivenPersonOBject_WhenDeletePerson_ShouldReturnRemovePersonAndAddresses() {
+  
+    List<Address> addresses = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
+    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    person.getAddresses().add(address);
+    personRepository.save(person);
+
+    person.getAddresses().stream().forEach(addressInAddresses -> addressRepository.deleteById(addressInAddresses.getId()));
+    personRepository.deleteById(person.getId());
+
+    Optional<Person> personOptional = personRepository.findById(person.getId());
+    assertTrue(personOptional.isEmpty());
+
+    person.getAddresses().stream().forEach(addressInAddresses -> {
+        Optional<Address> addressOptional = addressRepository.findById(addressInAddresses.getId());
+        assertTrue(addressOptional.isEmpty());
+    });
   }
 }
