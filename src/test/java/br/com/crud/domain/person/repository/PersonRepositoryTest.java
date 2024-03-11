@@ -111,4 +111,40 @@ public class PersonRepositoryTest {
     assertNotNull(savedPerson.getCpf());
     assertEquals(person.getCpf(), savedPerson.getCpf());
   }
+
+  @DisplayName("Given Person Object When Update Person and Addresses Should Return Person and Addresses")
+  @Test
+  void testGivenPersonOBject_WhenUpdatePersonAndAddresses_ShouldReturnPersonAndAddresses() {
+  
+    List<Address> addressesPerson = new ArrayList<>();
+    Person person = new Person("Test name", LocalDate.now(), "12345678910", addressesPerson);
+    Address address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    person.getAddresses().add(address);
+    personRepository.save(person);
+
+    Person savedPerson = personRepository.findById(person.getId()).get();
+    savedPerson.setName("Roger");
+    savedPerson.setCpf("22222222222");
+
+    Address savedAddress = savedPerson.getAddresses().get(0);
+    savedAddress.setStreet("Updated Street");
+    savedAddress.setNumber(456);
+    savedAddress.setNeighborhood("Updated Neighborhood");
+    savedAddress.setState(State.SAO_PAULO);
+    savedAddress.setZipCode("54321");
+
+    Person updatededPerson = personRepository.save(savedPerson); 
+    Address uptadetededAddress = addressRepository.save(savedAddress); 
+
+    assertNotNull(updatededPerson);
+    assertEquals("Roger", updatededPerson.getName());
+    assertEquals("22222222222", updatededPerson.getCpf());
+
+    assertNotNull(uptadetededAddress);
+    assertEquals("Updated Street", uptadetededAddress.getStreet());
+    assertEquals(456, uptadetededAddress.getNumber());
+    assertEquals("Updated Neighborhood", uptadetededAddress.getNeighborhood());
+    assertEquals(State.SAO_PAULO, uptadetededAddress.getState());
+    assertEquals("54321", uptadetededAddress.getZipCode());
+  }
 }
