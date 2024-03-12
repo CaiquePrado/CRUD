@@ -54,9 +54,9 @@ class DeletePersonUseCaseImplTest {
     person.getAddresses().add(address);
   }
 
-  @DisplayName("Given Person cpf when Delete Person then do Nothing")
+  @DisplayName("Given Person cpf when Delete Person Should do Nothing")
   @Test
-  void testGivenPersonCpf_WhenDeletePerson_thenDoNothing(){
+  void testGivenPersonCpf_WhenDeletePerson_ShouldDoNothing(){
 
     given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(person));
     willDoNothing().given(personRepository).delete(person);
@@ -66,9 +66,9 @@ class DeletePersonUseCaseImplTest {
     verify(personRepository, times(1)).delete(person);
   }
 
-  @DisplayName("Given invalid Person cpf when Delete Person then throw CpfNotFoundException")
+  @DisplayName("Given invalid Person cpf when Delete Person Should throw CpfNotFoundException")
   @Test
-  void testGivenInvalidPersonCpf_WhenDeletePerson_thenThrowException(){
+  void testGivenInvalidPersonCpf_WhenDeletePerson_ShouldThrowException(){
 
     String invalidCpf = "invalidCpf";
     given(personRepository.findPersonByCpf(invalidCpf)).willReturn(Optional.empty());

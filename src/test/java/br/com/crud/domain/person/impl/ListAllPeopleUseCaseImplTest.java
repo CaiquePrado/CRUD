@@ -55,9 +55,9 @@ class ListAllPeopleUseCaseImplTest {
     personTwo.getAddresses().add(addresspersonTwo);
   }
 
-  @DisplayName("Given Persons List when findAll Persons then Return Persons List")
+  @DisplayName("Given Persons List when findAll Persons Should Return Persons List")
   @Test
-  void testGivenPersonsList_WhenFindAllPersons_thenReturnPersonsList() {
+  void testGivenPersonsList_WhenFindAllPersons_ShouldReturnPersonsList() {
 
     given(personRepository.findAll()).willReturn(List.of(person, personTwo));
     given(addressRepository.findByPerson(person)).willReturn(person.getAddresses());
