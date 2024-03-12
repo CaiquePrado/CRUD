@@ -1,9 +1,12 @@
 package br.com.crud.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.crud.domain.person.entity.Person;
-import br.com.crud.domain.person.services.usecases.impl.CreatePersonUseCaseImpl;
-import br.com.crud.domain.person.services.usecases.impl.DeletePersonUseCaseImpl;
-import br.com.crud.domain.person.services.usecases.impl.ListAllPeopleUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
 import jakarta.validation.Valid;
 
 @RestController
@@ -46,6 +49,16 @@ public class PersonController {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @GetMapping
+  public ResponseEntity<List<Person>> getAll(){
+    try {
+      List<Person> people = listAllPeopleUseCaseImpl.execute();
+      return ResponseEntity.ok(people);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 }
