@@ -22,7 +22,7 @@ import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 
 @DataJpaTest
-public class PersonRepositoryTest {
+class PersonRepositoryTest {
   
   @Autowired
   PersonRepository personRepository;

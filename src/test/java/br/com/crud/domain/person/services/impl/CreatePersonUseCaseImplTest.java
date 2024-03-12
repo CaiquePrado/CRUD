@@ -55,7 +55,7 @@ class CreatePersonUseCaseImplTest {
     person.getAddresses().add(address);
   }
 
-  @DisplayName("Given Person Object when Save Person then Return Person and addresses")
+  @DisplayName("Given Person Object when Save Person should Return Person and addresses")
   @Test
   void testGivenPersonObject_WhenSavePerson_ShouldReturnPersonAndAddresses() {
 
@@ -70,7 +70,7 @@ class CreatePersonUseCaseImplTest {
     assertFalse(savedPerson.getAddresses().isEmpty());
   }
   
-  @DisplayName("Given Person Object with Existing CPF when Save Person then Throw CpfAlreadyExistsException")
+  @DisplayName("Given Person Object with Existing CPF when Save Person should Throw CpfAlreadyExistsException")
   @Test
   void testGivenPersonObjectWithExistingCPF_WhenSavePerson_ShouldThrowCpfAlreadyExistsException() {
     given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(person));

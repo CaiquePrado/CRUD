@@ -20,7 +20,7 @@ public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
   private PersonRepository personRepository;
 
   @Autowired 
-  AddressRepository addressRepository;
+  private AddressRepository addressRepository;
 
   @Override
   public Person execute(Person person) {
@@ -35,7 +35,7 @@ public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
   }
 
   private void verifyIfCpfExists(String cpf) {
-    personRepository.findPersonByCpf(cpf).ifPresent((person)->{
+    personRepository.findPersonByCpf(cpf).ifPresent((person)-> {
       throw new CpfAlreadyExistsException("Already exists a person registered with this CPF");
     });
   }
