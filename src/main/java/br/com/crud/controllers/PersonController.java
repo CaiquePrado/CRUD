@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.crud.domain._exceptions.CpfMismatchException;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
 import jakarta.validation.Valid;
 
 @RestController
@@ -31,6 +34,9 @@ public class PersonController {
 
   @Autowired
   private ListAllPeopleUseCaseImpl listAllPeopleUseCaseImpl;
+
+  @Autowired
+  private UpdatePersonUseCaseImpl updatePersonUseCaseImpl;
 
   @PostMapping
   public ResponseEntity<Object> create(@Valid @RequestBody Person person){
@@ -55,10 +61,23 @@ public class PersonController {
   @GetMapping
   public ResponseEntity<List<Person>> getAll(){
     try {
-      List<Person> people = listAllPeopleUseCaseImpl.execute();
-      return ResponseEntity.ok(people);
+      List<Person> result = listAllPeopleUseCaseImpl.execute();
+      return ResponseEntity.ok().body(result);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  @PutMapping("/{cpf}")
+  public ResponseEntity<Object> update(@PathVariable String cpf, @Valid @RequestBody Person person){
+    try {
+      if (!person.getCpf().equals(cpf)) {
+        throw new CpfMismatchException("The CPF in the URL does not match the CPF of the person to be updated.");
+      }
+      var result = updatePersonUseCaseImpl.execute(person);
+      return ResponseEntity.ok().body(result);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 }
