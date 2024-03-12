@@ -2,6 +2,8 @@ package br.com.crud.domain.address.entity;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.person.entity.Person;
 import jakarta.persistence.Column;
@@ -56,5 +58,6 @@ public class Address {
 
   @ManyToOne
   @JoinColumn(name = "person_id")
+  @JsonIgnore
   private Person person;
 }
