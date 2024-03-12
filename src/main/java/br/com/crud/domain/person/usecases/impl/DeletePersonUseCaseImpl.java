@@ -1,4 +1,4 @@
-package br.com.crud.domain.person.services.usecases.impl;
+package br.com.crud.domain.person.usecases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import br.com.crud.domain._exceptions.CpfNotFoundException;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
-import br.com.crud.domain.person.services.usecases.DeletePersonUseCase;
+import br.com.crud.domain.person.usecases.DeletePersonUseCase;
 
 @Service
 public class DeletePersonUseCaseImpl implements DeletePersonUseCase {

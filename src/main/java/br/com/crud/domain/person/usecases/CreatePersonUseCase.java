@@ -1,4 +1,4 @@
-package br.com.crud.domain.person.services.usecases;
+package br.com.crud.domain.person.usecases;
 
 import br.com.crud.domain.person.entity.Person;
 

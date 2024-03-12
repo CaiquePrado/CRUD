@@ -1,4 +1,4 @@
-package br.com.crud.domain.person.services.usecases;
+package br.com.crud.domain.person.usecases;
 
 public interface DeletePersonUseCase {
   

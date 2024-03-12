@@ -1,4 +1,4 @@
-package br.com.crud.domain.person.services.usecases.impl;
+package br.com.crud.domain.person.usecases.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
-import br.com.crud.domain.person.services.usecases.CreatePersonUseCase;
+import br.com.crud.domain.person.usecases.CreatePersonUseCase;
 
 @Service
 public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
@@ -53,4 +53,3 @@ public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
     }
   }
 }
-
