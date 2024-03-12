@@ -1,4 +1,4 @@
-package br.com.crud.domain.person.services.impl;
+package br.com.crud.domain.person.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,7 +29,7 @@ import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
-import br.com.crud.domain.person.services.usecases.impl.CreatePersonUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
 
 @ExtendWith(MockitoExtension.class)
 class CreatePersonUseCaseImplTest {
