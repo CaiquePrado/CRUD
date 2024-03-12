@@ -1,8 +1,11 @@
 package br.com.crud.domain.person.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -19,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.crud.domain._exceptions.CpfNotFoundException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
@@ -51,9 +55,9 @@ public class DeletePersonUseCaseImplTest {
     person.getAddresses().add(address);
   }
 
-  @DisplayName("Given cpf when Delete Person then do Nothing")
+  @DisplayName("Given Person cpf when Delete Person then do Nothing")
   @Test
-  void testGivenPersonID_WhenDeletePerson_thenDoNothing(){
+  void testGivenPersonCpf_WhenDeletePerson_thenDoNothing(){
 
     given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(person));
     willDoNothing().given(personRepository).delete(person);
@@ -61,5 +65,19 @@ public class DeletePersonUseCaseImplTest {
     deletePersonUseCaseImpl.execute(person.getCpf());
 
     verify(personRepository, times(1)).delete(person);
+  }
+
+  @DisplayName("Given invalid Person cpf when Delete Person then throw CpfNotFoundException")
+  @Test
+  void testGivenInvalidPersonCpf_WhenDeletePerson_thenThrowException(){
+
+    String invalidCpf = "invalidCpf";
+    given(personRepository.findPersonByCpf(invalidCpf)).willReturn(Optional.empty());
+
+    assertThrows(CpfNotFoundException.class, () -> {
+      deletePersonUseCaseImpl.execute(invalidCpf);
+    });
+
+    verify(personRepository, never()).delete(any(Person.class));
   }
 }
