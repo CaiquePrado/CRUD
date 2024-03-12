@@ -31,7 +31,7 @@ import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class DeletePersonUseCaseImplTest {
+class DeletePersonUseCaseImplTest {
   
   @Mock
   PersonRepository personRepository;
@@ -42,7 +42,6 @@ public class DeletePersonUseCaseImplTest {
   @InjectMocks
   DeletePersonUseCaseImpl deletePersonUseCaseImpl;
   
-
   Person person;
   Address address;
   List<Address> addresses;

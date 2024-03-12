@@ -2,7 +2,7 @@ package br.com.crud.domain.address.entity;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.person.entity.Person;
@@ -19,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "tb_address")
@@ -58,6 +59,7 @@ public class Address {
 
   @ManyToOne
   @JoinColumn(name = "person_id")
-  @JsonIgnore
+  @JsonBackReference
+  @ToString.Exclude
   private Person person;
 }

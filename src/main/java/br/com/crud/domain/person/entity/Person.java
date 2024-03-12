@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.crud.domain.address.entity.Address;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "tb_person")
@@ -48,5 +51,7 @@ public class Person {
   private String cpf;
 
   @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+  @JsonManagedReference
+  @ToString.Exclude
   private List<Address> addresses = new ArrayList<>();
 }
