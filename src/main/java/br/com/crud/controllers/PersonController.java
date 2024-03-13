@@ -22,7 +22,6 @@ import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
-import br.com.crud.domain.person.usecases.impl.ShowPersonAgeUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
 import jakarta.validation.Valid;
 
@@ -41,9 +40,6 @@ public class PersonController {
 
   @Autowired
   private UpdatePersonUseCaseImpl updatePersonUseCaseImpl;
-
-  @Autowired
-  private ShowPersonAgeUseCaseImpl showPersonAgeUseCaseImpl;
 
   @Autowired
   private FindPersonByIdUseCaseImpl findPersonByIdUseCaseImpl;
@@ -97,7 +93,7 @@ public class PersonController {
       Optional<Person> result = findPersonByIdUseCaseImpl.execute(id);
       return ResponseEntity.ok().body(result);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+      return ResponseEntity.notFound().build();
     }
   }
 }
