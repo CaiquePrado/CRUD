@@ -1,6 +1,8 @@
 package br.com.crud.controllers;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,9 @@ import br.com.crud.domain._exceptions.CpfMismatchException;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
+import br.com.crud.domain.person.usecases.impl.ShowPersonAgeUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
 import jakarta.validation.Valid;
 
@@ -37,6 +41,12 @@ public class PersonController {
 
   @Autowired
   private UpdatePersonUseCaseImpl updatePersonUseCaseImpl;
+
+  @Autowired
+  private ShowPersonAgeUseCaseImpl showPersonAgeUseCaseImpl;
+
+  @Autowired
+  private FindPersonByIdUseCaseImpl findPersonByIdUseCaseImpl;
 
   @PostMapping
   public ResponseEntity<Object> create(@Valid @RequestBody Person person){
@@ -75,6 +85,16 @@ public class PersonController {
         throw new CpfMismatchException("The CPF in the URL does not match the CPF of the person to be updated.");
       }
       var result = updatePersonUseCaseImpl.execute(person);
+      return ResponseEntity.ok().body(result);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Object> getById(@PathVariable UUID id){
+    try {
+      Optional<Person> result = findPersonByIdUseCaseImpl.execute(id);
       return ResponseEntity.ok().body(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
