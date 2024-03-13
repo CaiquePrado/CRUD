@@ -23,6 +23,7 @@ import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -45,6 +46,7 @@ public class PersonController {
   private FindPersonByIdUseCaseImpl findPersonByIdUseCaseImpl;
 
   @PostMapping
+  @Operation(summary = "Create person")
   public ResponseEntity<Object> create(@Valid @RequestBody Person person){
     try {
       var result = createPersonUseCaseImpl.execute(person);
@@ -55,6 +57,7 @@ public class PersonController {
   }
 
   @DeleteMapping("/{cpf}")
+  @Operation(summary = "Delete person by cpf")
   public ResponseEntity<Object> delete(@PathVariable String cpf){
     try {
       deletePersonUseCaseImpl.execute(cpf);
@@ -65,6 +68,7 @@ public class PersonController {
   }
 
   @GetMapping
+  @Operation(summary = "List all people")
   public ResponseEntity<List<Person>> getAll(){
     try {
       List<Person> result = listAllPeopleUseCaseImpl.execute();
@@ -75,6 +79,7 @@ public class PersonController {
   }
 
   @PutMapping("/{cpf}")
+  @Operation(summary = "Update person by cpf")
   public ResponseEntity<Object> update(@PathVariable String cpf, @Valid @RequestBody Person person){
     try {
       if (!person.getCpf().equals(cpf)) {
@@ -88,6 +93,7 @@ public class PersonController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Find person by id")
   public ResponseEntity<Object> getById(@PathVariable UUID id){
     try {
       Optional<Person> result = findPersonByIdUseCaseImpl.execute(id);
