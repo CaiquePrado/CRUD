@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.crud.domain._exceptions.CpfAlreadyExistsException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.CreatePersonUseCase;
+import br.com.crud.infra.exceptions.InvalidRequestException;
 
 @Service
 public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
@@ -36,7 +36,7 @@ public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
 
   private void verifyIfCpfExists(String cpf) {
     personRepository.findPersonByCpf(cpf).ifPresent((person)-> {
-      throw new CpfAlreadyExistsException("Already exists a person registered with this CPF");
+      throw new InvalidRequestException("Already exists a person registered with this CPF");
     });
   }
 

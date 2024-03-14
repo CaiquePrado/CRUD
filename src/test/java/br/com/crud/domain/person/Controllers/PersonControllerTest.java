@@ -162,8 +162,8 @@ public class PersonControllerTest {
   }
 
   @Test
-  @DisplayName("Given Mismatched CPF when Update Should Throw CpfMismatchException")
-  void testGivenMismatchedCPF_WhenUpdate_ShouldThrowCpfMismatchException() throws Exception {
+  @DisplayName("Given Mismatched CPF when Update Should Throw  InvalidRequestException")
+  void testGivenMismatchedCPF_WhenUpdate_ShouldThrowInvalidRequestException() throws Exception {
 
     Person updatedPerson = new Person("Caique name", LocalDate.now(), "12345678910", addresses);
     String mismatchedCpf = "11122233344";

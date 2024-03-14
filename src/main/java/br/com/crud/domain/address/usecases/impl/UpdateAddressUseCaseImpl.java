@@ -5,10 +5,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.crud.domain._exceptions.AddressNotFoundException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.address.usecases.UpdateAddressUseCase;
+import br.com.crud.infra.exceptions.ResourceNotFoundException;
 
 @Service
 public class UpdateAddressUseCaseImpl implements UpdateAddressUseCase {
@@ -31,6 +31,6 @@ public class UpdateAddressUseCaseImpl implements UpdateAddressUseCase {
   }
 
   private Address verifyIfAddressExists(UUID id) {
-    return addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException("Address not found!"));
+    return addressRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Address not found!"));
   }
 }

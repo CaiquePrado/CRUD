@@ -21,13 +21,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.crud.domain._exceptions.CpfMismatchException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
+import br.com.crud.infra.exceptions.InvalidRequestException;
 
 @ExtendWith(MockitoExtension.class)
 public class UpdatePersonUseCaseImplTest {
@@ -79,8 +79,8 @@ public class UpdatePersonUseCaseImplTest {
   }
 
   @Test
-  @DisplayName("Given Mismatched CPF when Update Person Should Throw CpfMismatchException")
-  void testGivenMismatchedCpf_WhenUpdatePerson_ShouldThrowCpfMismatchException() {
+  @DisplayName("Given Mismatched CPF when Update Person Should Throw  InvalidRequestException")
+  void testGivenMismatchedCpf_WhenUpdatePerson_ShouldThrowInvalidRequestException() {
 
     person.setName("Kaique");
     person.setBirthDate(LocalDate.now());
@@ -88,7 +88,7 @@ public class UpdatePersonUseCaseImplTest {
 
     String mismatchedCpf = "11111111111";
 
-    assertThrows(CpfMismatchException.class, () -> {
+    assertThrows( InvalidRequestException.class, () -> {
       updatePersonUseCaseImpl.execute(mismatchedCpf, person);
     });
   }

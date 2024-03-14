@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.crud.domain._exceptions.CpfMismatchException;
-import br.com.crud.domain._exceptions.CpfNotFoundException;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.UpdatePersonUseCase;
+import br.com.crud.infra.exceptions.InvalidRequestException;
+import br.com.crud.infra.exceptions.ResourceNotFoundException;
 
 @Service
 public class UpdatePersonUseCaseImpl implements UpdatePersonUseCase {
@@ -25,7 +25,7 @@ public class UpdatePersonUseCaseImpl implements UpdatePersonUseCase {
   public Person execute(String cpf,Person person) {
 
   if (!person.getCpf().equals(cpf)) {
-      throw new CpfMismatchException("The CPF in the URL does not match the CPF of the person to be updated.");
+      throw new  InvalidRequestException("The CPF in the URL does not match the CPF of the person to be updated.");
   }
 
   Person existingPerson = verifyIfCpfExists(person.getCpf());
@@ -43,6 +43,6 @@ public class UpdatePersonUseCaseImpl implements UpdatePersonUseCase {
   }
 
   private Person verifyIfCpfExists(String cpf) {
-    return personRepository.findPersonByCpf(cpf).orElseThrow(() -> new CpfNotFoundException("CPF not found!"));
+    return personRepository.findPersonByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("CPF not found!"));
   }
 }

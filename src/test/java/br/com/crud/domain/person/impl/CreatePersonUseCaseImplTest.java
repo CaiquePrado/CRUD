@@ -23,13 +23,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.crud.domain._exceptions.CpfAlreadyExistsException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
+import br.com.crud.infra.exceptions.InvalidRequestException;
 
 @ExtendWith(MockitoExtension.class)
 class CreatePersonUseCaseImplTest {
@@ -70,12 +70,12 @@ class CreatePersonUseCaseImplTest {
     assertFalse(savedPerson.getAddresses().isEmpty());
   }
   
-  @DisplayName("Given Person Object with Existing CPF when Save Person should Throw CpfAlreadyExistsException")
+  @DisplayName("Given Person Object with Existing CPF when Save Person should Throw  InvalidRequestException")
   @Test
-  void testGivenPersonObjectWithExistingCPF_WhenSavePerson_ShouldThrowCpfAlreadyExistsException() {
+  void testGivenPersonObjectWithExistingCPF_WhenSavePerson_ShouldThrowInvalidRequestException() {
     given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(person));
 
-    assertThrows(CpfAlreadyExistsException.class, () -> {
+    assertThrows( InvalidRequestException.class, () -> {
       createPersonUseCaseImpl.execute(person);
     });
 

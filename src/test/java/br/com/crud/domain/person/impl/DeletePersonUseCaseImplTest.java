@@ -22,13 +22,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.crud.domain._exceptions.CpfNotFoundException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
+import br.com.crud.infra.exceptions.ResourceNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class DeletePersonUseCaseImplTest {
@@ -66,14 +66,14 @@ class DeletePersonUseCaseImplTest {
     verify(personRepository, times(1)).delete(person);
   }
 
-  @DisplayName("Given invalid Person cpf when Delete Person Should throw CpfNotFoundException")
+  @DisplayName("Given invalid Person cpf when Delete Person Should throw ResourceNotFoundException")
   @Test
   void testGivenInvalidPersonCpf_WhenDeletePerson_ShouldThrowException(){
 
     String invalidCpf = "invalidCpf";
     given(personRepository.findPersonByCpf(invalidCpf)).willReturn(Optional.empty());
 
-    assertThrows(CpfNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       deletePersonUseCaseImpl.execute(invalidCpf);
     });
 

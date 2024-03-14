@@ -20,13 +20,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.crud.domain._exceptions.IdNotFoundException;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
+import br.com.crud.infra.exceptions.ResourceNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class FindPersonByIdUseCaseImplTest {
@@ -67,14 +67,14 @@ public class FindPersonByIdUseCaseImplTest {
     assertEquals(person.getName(), savedPerson.get().getName());
   }
   
-  @DisplayName("Given Wrong PersonId when findById Should Return IdNotFoundException")
+  @DisplayName("Given Wrong PersonId when findById Should Return ResourceNotFoundException")
   @Test
-  void testGivenWrongPersonId_WhenFindById_ShouldReturnIdNotFoundException() {
+  void testGivenWrongPersonId_WhenFindById_ShouldReturnResourceNotFoundException() {
         
     UUID wrongId = UUID.randomUUID();
     lenient().when(personRepository.findById(wrongId)).thenReturn(Optional.empty());
 
-    assertThrows(IdNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       findPersonByIdUseCaseImpl.execute(wrongId);
     });
   }  

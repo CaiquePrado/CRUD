@@ -6,11 +6,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.crud.domain._exceptions.IdNotFoundException;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.FindPersonByIdUseCase;
+import br.com.crud.infra.exceptions.ResourceNotFoundException;
 
 @Service
 public class FindPersonByIdUseCaseImpl implements FindPersonByIdUseCase {
@@ -32,7 +32,7 @@ public class FindPersonByIdUseCaseImpl implements FindPersonByIdUseCase {
 
   private void verifyIfIdExists(UUID id) {
     if (!personRepository.existsById(id)) {
-      throw new IdNotFoundException("No person found with this ID");
+      throw new ResourceNotFoundException("No person found with this ID");
     }
   }
 }
