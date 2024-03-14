@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
+import br.com.crud.domain.person.dtos.CreatePersonDTO;
+import br.com.crud.domain.person.dtos.mapper.PersonMapper;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
 import br.com.crud.domain.person.usecases.CreatePersonUseCase;
@@ -22,8 +24,13 @@ public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
   @Autowired 
   private AddressRepository addressRepository;
 
+  @Autowired
+  private PersonMapper personMapper;
+
   @Override
-  public Person execute(Person person) {
+  public Person execute(CreatePersonDTO createPersonDTO) {
+
+    Person person = personMapper.toPerson(createPersonDTO);
 
     verifyIfCpfExists(person.getCpf());
 

@@ -35,8 +35,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.crud.domain.address.dtos.CreateAddressDTO;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
+import br.com.crud.domain.person.dtos.CreatePersonDTO;
+import br.com.crud.domain.person.dtos.UpdatePersonDTO;
+import br.com.crud.domain.person.dtos.mapper.PersonMapper;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
@@ -73,32 +77,47 @@ public class PersonControllerTest {
   Person person;
   Address address;
   List<Address> addresses;
+  List<CreateAddressDTO> addressesDTO;
+  CreatePersonDTO createPersonDTO;
+  UpdatePersonDTO updatePersonDTO;
+  CreateAddressDTO createAddressDTO;
+
+  @MockBean
+  PersonMapper personMapper;
 
   @BeforeEach
   void setup(){
-    addresses = new ArrayList<>();
+    addressesDTO = new ArrayList<>();
+    createAddressDTO = new CreateAddressDTO("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345");
+    addressesDTO.add(createAddressDTO);
+    createPersonDTO = new CreatePersonDTO("Test name", LocalDate.now(), "02326713036", addressesDTO);
+
+    List<Address> addresses = new ArrayList<>();
     person = new Person("Test name", LocalDate.now(), "12345678910", addresses);
-    address = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
-    person.getAddresses().add(address);
+    Address addressperson = new Address("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345", person);
+    person.getAddresses().add(addressperson);
+    
   }
 
   @Test
   @DisplayName("Given Person Object when Create Person Should Return Saved Person")
   void testGivenPersonObject_WhenCreatePerson_ShouldReturnSavedPerson() throws JsonProcessingException, Exception {
+
+    Person person = personMapper.toPerson(createPersonDTO);
     
     given(createPersonUseCaseImpl.execute(any(Person.class)))
     .willAnswer((invocation) -> invocation.getArgument(0));
 
     ResultActions response = mockMvc.perform(post("/api/v1/person")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(objectMapper.writeValueAsString(person))
-    );
+    .contentType(MediaType.APPLICATION_JSON)
+    .content(objectMapper.writeValueAsString(createPersonDTO))
+  );
 
     response.andDo(print())
     .andExpect(status().isCreated())
-    .andExpect(jsonPath("$.name", is(person.getName())))
-    .andExpect(jsonPath("$.birthDate", is(person.getBirthDate().toString())))
-    .andExpect(jsonPath("$.cpf", is(person.getCpf())));
+    .andExpect(jsonPath("$.name", is(createPersonDTO.getName())))
+    .andExpect(jsonPath("$.birthDate", is(createPersonDTO.getBirthDate().toString())))
+    .andExpect(jsonPath("$.cpf", is(createPersonDTO.getCpf())));
   }
 
   @Test
@@ -142,7 +161,7 @@ public class PersonControllerTest {
   void testGivenUpdatedPerson_WhenUpdate_ShouldReturnUpdatedPersonObject() throws JsonProcessingException, Exception {
 
     given(findPersonByIdUseCaseImpl.execute(any(UUID.class))).willReturn(Optional.of(person));
-    given(updatePersonUseCaseImpl.execute(any(String.class), any(Person.class)))
+    given(updatePersonUseCaseImpl.execute(any(String.class), any(UpdatePersonDTO.class)))
       .willAnswer((invocation) -> invocation.getArgument(1));
     
     Person updatedPerson = new Person("Caique name", LocalDate.now(), "12345678910", addresses);
