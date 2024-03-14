@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.crud.domain._exceptions.CpfMismatchException;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.usecases.impl.CreatePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
@@ -84,10 +83,7 @@ public class PersonController {
   @Operation(summary = "Update person by cpf")
   public ResponseEntity<Object> update(@PathVariable String cpf, @Valid @RequestBody Person person){
     try {
-      if (!person.getCpf().equals(cpf)) {
-        throw new CpfMismatchException("The CPF in the URL does not match the CPF of the person to be updated.");
-      }
-      var result = updatePersonUseCaseImpl.execute(person);
+      var result = updatePersonUseCaseImpl.execute(cpf, person);
       return ResponseEntity.ok().body(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());

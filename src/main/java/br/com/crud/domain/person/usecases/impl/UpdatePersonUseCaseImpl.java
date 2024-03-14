@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.crud.domain._exceptions.CpfMismatchException;
 import br.com.crud.domain._exceptions.CpfNotFoundException;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.entity.Person;
@@ -21,7 +22,11 @@ public class UpdatePersonUseCaseImpl implements UpdatePersonUseCase {
   private AddressRepository addressRepository;
 
   @Override
-  public Person execute(Person person) {
+  public Person execute(String cpf,Person person) {
+
+  if (!person.getCpf().equals(cpf)) {
+      throw new CpfMismatchException("The CPF in the URL does not match the CPF of the person to be updated.");
+  }
 
   Person existingPerson = verifyIfCpfExists(person.getCpf());
 

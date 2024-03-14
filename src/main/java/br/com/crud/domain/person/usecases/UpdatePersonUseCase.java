@@ -4,6 +4,6 @@ import br.com.crud.domain.person.entity.Person;
 
 public interface UpdatePersonUseCase {
   
-  Person execute(Person person);
+  Person execute( String cpf,Person person);
 
 }
