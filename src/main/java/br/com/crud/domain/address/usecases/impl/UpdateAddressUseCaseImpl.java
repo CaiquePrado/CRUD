@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.crud.domain.address.dtos.UpdateAddressDTO;
+import br.com.crud.domain.address.dtos.mapper.AddressMapper;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.address.usecases.UpdateAddressUseCase;
@@ -16,8 +18,12 @@ public class UpdateAddressUseCaseImpl implements UpdateAddressUseCase {
   @Autowired
   private AddressRepository addressRepository;
 
+  @Autowired
+  private AddressMapper addressMapper;
+
   @Override
-  public Address execute(Address address, UUID id) {
+  public Address execute(UpdateAddressDTO updateAddressDTO, UUID id) {
+    Address address = addressMapper.toAddress(updateAddressDTO);
 
     Address existingAddress = verifyIfAddressExists(id);
 

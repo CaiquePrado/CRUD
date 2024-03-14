@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.crud.domain.address.entity.Address;
+import br.com.crud.domain.address.dtos.CreateAddressDTO;
+import br.com.crud.domain.address.dtos.UpdateAddressDTO;
 import br.com.crud.domain.address.usecases.impl.CreateAddressUseCaseImpl;
 import br.com.crud.domain.address.usecases.impl.DeleteAddressUseCaseImpl;
 import br.com.crud.domain.address.usecases.impl.UpdateAddressUseCaseImpl;
@@ -33,9 +34,9 @@ public class AddressController {
   private UpdateAddressUseCaseImpl updateAddressUseCaseImpl;
   
   @PostMapping("/{id}")
-  public ResponseEntity<Object> create(@PathVariable UUID id, @Valid @RequestBody Address address){
+  public ResponseEntity<Object> create(@PathVariable UUID id, @Valid @RequestBody CreateAddressDTO createAddressDTO){
     try {
-      var result = createAddressUseCaseImpl.execute(address, id);
+      var result = createAddressUseCaseImpl.execute(createAddressDTO, id);
       return ResponseEntity.status(HttpStatus.CREATED).body(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -54,9 +55,9 @@ public class AddressController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Object> update(@PathVariable UUID id, @Valid @RequestBody Address address){
+  public ResponseEntity<Object> update(@PathVariable UUID id, @Valid @RequestBody UpdateAddressDTO updateAddressDTO){
     try {
-      var result = updateAddressUseCaseImpl.execute(address, id);
+      var result = updateAddressUseCaseImpl.execute(updateAddressDTO, id);
       return ResponseEntity.status(HttpStatus.OK).body(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
