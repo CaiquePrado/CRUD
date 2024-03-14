@@ -44,7 +44,6 @@ import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -162,11 +161,11 @@ public class PersonControllerTest {
   }
 
   @Test
-  @DisplayName("Given Mismatched CPF when Update Should Throw  InvalidRequestException")
-  void testGivenMismatchedCPF_WhenUpdate_ShouldThrowInvalidRequestException() throws Exception {
+  @DisplayName("Given Mismatched CPF when Update Should Throw InvalidRequestException")
+  void testGivenMismatchedCPF_WhenUpdate_ShouldThrowInvalidRequestException() throws JsonProcessingException, Exception {
 
     Person updatedPerson = new Person("Caique name", LocalDate.now(), "12345678910", addresses);
-    String mismatchedCpf = "11122233344";
+    String mismatchedCpf = "22122233344";
 
     ResultActions response = mockMvc.perform(put("/api/v1/person/{cpf}", mismatchedCpf)
         .contentType(MediaType.APPLICATION_JSON)

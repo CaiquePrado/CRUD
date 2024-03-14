@@ -23,6 +23,7 @@ import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
+import br.com.crud.infra.exceptions.InvalidRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
@@ -83,6 +84,11 @@ public class PersonController {
   @Operation(summary = "Update person by cpf")
   public ResponseEntity<Object> update(@PathVariable String cpf, @Valid @RequestBody Person person){
     try {
+
+      if (!person.getCpf().equals(cpf)) {
+        throw new  InvalidRequestException("The CPF in the URL does not match the CPF of the person to be updated.");
+      }
+
       var result = updatePersonUseCaseImpl.execute(cpf, person);
       return ResponseEntity.ok().body(result);
     } catch (Exception e) {
