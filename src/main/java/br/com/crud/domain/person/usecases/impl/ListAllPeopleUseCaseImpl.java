@@ -1,8 +1,9 @@
 package br.com.crud.domain.person.usecases.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.crud.domain.address.repository.AddressRepository;
@@ -20,8 +21,9 @@ public class ListAllPeopleUseCaseImpl implements ListAllPeopleUseCase {
   private AddressRepository addressRepository;
 
   @Override
-  public List<Person> execute() {
-    List<Person> people = personRepository.findAll();
+  public Page<Person> execute(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Person> people = personRepository.findAll(pageable);
     people.stream().forEach(person -> person.setAddresses(addressRepository.findByPerson(person)));
     return people;
   }

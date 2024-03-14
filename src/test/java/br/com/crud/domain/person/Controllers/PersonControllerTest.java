@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,6 +43,7 @@ import br.com.crud.domain.person.usecases.impl.DeletePersonUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.FindPersonByIdUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.ListAllPeopleUseCaseImpl;
 import br.com.crud.domain.person.usecases.impl.UpdatePersonUseCaseImpl;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -106,14 +109,20 @@ public class PersonControllerTest {
     List<Person> persons = new ArrayList<>();
     persons.add(person);
 
-    given(listAllPeopleUseCaseImpl.execute()).willReturn(persons);
+    int page = 0;
+    int size = 10;
+    Page<Person> personPage = new PageImpl<>(persons);
 
-    ResultActions response = mockMvc.perform(get("/api/v1/person"));
+    given(listAllPeopleUseCaseImpl.execute(page, size)).willReturn(personPage);
+
+    ResultActions response = mockMvc.perform(get("/api/v1/person")
+        .param("page", String.valueOf(page))
+        .param("size", String.valueOf(size)));
 
     response.
     andExpect(status().isOk())
     .andDo(print())
-    .andExpect(jsonPath("$.size()", is(persons.size())));
+    .andExpect(jsonPath("$.content.size()", is(persons.size())));
   }
 
   @Test

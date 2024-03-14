@@ -19,6 +19,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
@@ -59,16 +63,21 @@ class ListAllPeopleUseCaseImplTest {
   @Test
   void testGivenPersonsList_WhenFindAllPersons_ShouldReturnPersonsList() {
 
-    given(personRepository.findAll()).willReturn(List.of(person, personTwo));
+    int page = 0;
+    int size = 10;
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Person> personPage = new PageImpl<>(List.of(person, personTwo));
+
+    given(personRepository.findAll(pageable)).willReturn(personPage);
     given(addressRepository.findByPerson(person)).willReturn(person.getAddresses());
     given(addressRepository.findByPerson(personTwo)).willReturn(personTwo.getAddresses());
 
-    List<Person> personsList = listAllPeopleUseCaseImpl.execute();
+    Page<Person> personsPage = listAllPeopleUseCaseImpl.execute(page, size);
 
-    assertNotNull(personsList);
-    assertEquals(2, personsList.size());
-    assertTrue(personsList.containsAll(List.of(person, personTwo)));
-    verify(personRepository, times(1)).findAll();
+    assertNotNull(personsPage);
+    assertEquals(2, personsPage.getContent().size());
+    assertTrue(personsPage.getContent().containsAll(List.of(person, personTwo)));
+    verify(personRepository, times(1)).findAll(pageable);
     verify(addressRepository, times(2)).findByPerson(any(Person.class));
   }
 }
