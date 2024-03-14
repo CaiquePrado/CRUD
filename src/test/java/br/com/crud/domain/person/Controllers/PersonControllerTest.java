@@ -143,8 +143,8 @@ public class PersonControllerTest {
   void testGivenUpdatedPerson_WhenUpdate_ShouldReturnUpdatedPersonObject() throws JsonProcessingException, Exception {
 
     given(findPersonByIdUseCaseImpl.execute(any(UUID.class))).willReturn(Optional.of(person));
-    given(updatePersonUseCaseImpl.execute(any(Person.class)))
-        .willAnswer((invocation) -> invocation.getArgument(0));
+    given(updatePersonUseCaseImpl.execute(any(String.class), any(Person.class)))
+      .willAnswer((invocation) -> invocation.getArgument(1));
     
     Person updatedPerson = new Person("Caique name", LocalDate.now(), "12345678910", addresses);
     
