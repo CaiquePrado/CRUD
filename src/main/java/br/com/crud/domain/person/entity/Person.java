@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import br.com.crud.domain.address.dtos.CreateAddressDTO;
 import br.com.crud.domain.address.entity.Address;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,11 +31,11 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 public class Person {
 
-  public Person(String name, LocalDate birthDate, String cpf, List<Address> addresses) {
+  public Person(String name, LocalDate birthDate, String cpf, List<Address> addresses2) {
     this.name = name;
     this.birthDate = birthDate;
     this.cpf = cpf;
-    this.addresses = addresses;
+    this.addresses = addresses2;
   }
   
   @Id

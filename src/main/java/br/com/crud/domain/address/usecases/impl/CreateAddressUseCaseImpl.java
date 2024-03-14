@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.crud.domain.address.dtos.CreateAddressDTO;
+import br.com.crud.domain.address.dtos.mapper.AddressMapper;
 import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.address.usecases.CreateAddressUseCase;
@@ -21,8 +23,12 @@ public class CreateAddressUseCaseImpl implements CreateAddressUseCase {
   @Autowired
   private PersonRepository personRepository;
 
+  @Autowired
+  private AddressMapper addressMapper;
+
   @Override
-  public Address execute(Address address, UUID id) {
+  public Address execute(CreateAddressDTO createAddressDTO, UUID id) {
+    Address address = addressMapper.toAddress(createAddressDTO);
     Person person = verifyIfPersonExists(id);
     address.setPerson(person);
     return saveAddress(address);
@@ -36,3 +42,4 @@ public class CreateAddressUseCaseImpl implements CreateAddressUseCase {
     return addressRepository.save(address);
   }
 }
+
