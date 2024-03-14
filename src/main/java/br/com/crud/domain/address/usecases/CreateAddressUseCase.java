@@ -6,6 +6,6 @@ import br.com.crud.domain.address.entity.Address;
 
 public interface CreateAddressUseCase {
   
-  Address execute(Address address, UUID personId);
+  Address execute(Address address, UUID id);
 
 }

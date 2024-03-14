@@ -33,14 +33,15 @@ public class AddressController {
   private UpdateAddressUseCaseImpl updateAddressUseCaseImpl;
   
   @PostMapping("/{id}")
-  public ResponseEntity<Object> create(@PathVariable UUID personId, @Valid @RequestBody Address address){
+  public ResponseEntity<Object> create(@PathVariable UUID id, @Valid @RequestBody Address address){
     try {
-      var result = createAddressUseCaseImpl.execute(address, personId);
+      var result = createAddressUseCaseImpl.execute(address, id);
       return ResponseEntity.status(HttpStatus.CREATED).body(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
+
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> delete(@PathVariable UUID id){

@@ -22,15 +22,14 @@ public class CreateAddressUseCaseImpl implements CreateAddressUseCase {
   private PersonRepository personRepository;
 
   @Override
-  public Address execute(Address address, UUID personId) {
-    Person person = verifyIfPersonExists(personId);
+  public Address execute(Address address, UUID id) {
+    Person person = verifyIfPersonExists(id);
     address.setPerson(person);
     return saveAddress(address);
   }
 
-  private Person verifyIfPersonExists(UUID personId){
-    return personRepository.findById(personId)
-      .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + personId));
+  private Person verifyIfPersonExists(UUID id){
+    return personRepository.findById(id).orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
   }
 
   private Address saveAddress(Address address){
