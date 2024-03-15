@@ -18,6 +18,7 @@ import br.com.crud.domain.address.dtos.UpdateAddressDTO;
 import br.com.crud.domain.address.usecases.impl.CreateAddressUseCaseImpl;
 import br.com.crud.domain.address.usecases.impl.DeleteAddressUseCaseImpl;
 import br.com.crud.domain.address.usecases.impl.UpdateAddressUseCaseImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,6 +35,7 @@ public class AddressController {
   private UpdateAddressUseCaseImpl updateAddressUseCaseImpl;
   
   @PostMapping("/{id}")
+  @Operation(summary = "Create address by personId")
   public ResponseEntity<Object> create(@PathVariable UUID id, @Valid @RequestBody CreateAddressDTO createAddressDTO){
     try {
       var result = createAddressUseCaseImpl.execute(createAddressDTO, id);
@@ -45,6 +47,7 @@ public class AddressController {
 
 
   @DeleteMapping("/{id}")
+  @Operation(summary = "Create address by addressId")
   public ResponseEntity<Object> delete(@PathVariable UUID id){
     try {
       deleteAddressUseCaseImpl.execute(id);
@@ -55,6 +58,7 @@ public class AddressController {
   }
 
   @PutMapping("/{id}")
+  @Operation(summary = "Update address by addressId")
   public ResponseEntity<Object> update(@PathVariable UUID id, @Valid @RequestBody UpdateAddressDTO updateAddressDTO){
     try {
       var result = updateAddressUseCaseImpl.execute(updateAddressDTO, id);
