@@ -28,7 +28,6 @@ import br.com.crud.domain.address.entity.Address;
 import br.com.crud.domain.address.enums.State;
 import br.com.crud.domain.address.repository.AddressRepository;
 import br.com.crud.domain.person.dtos.CreatePersonDTO;
-import br.com.crud.domain.person.dtos.UpdatePersonDTO;
 import br.com.crud.domain.person.dtos.mapper.PersonMapper;
 import br.com.crud.domain.person.entity.Person;
 import br.com.crud.domain.person.repository.PersonRepository;
@@ -37,61 +36,69 @@ import br.com.crud.infra.exceptions.InvalidRequestException;
 
 @ExtendWith(MockitoExtension.class)
 class CreatePersonUseCaseImplTest {
-  
+
   @Mock
   PersonRepository personRepository;
 
   @Mock
   AddressRepository addressRepository;
 
+  @Mock
+  PersonMapper personMapper;
+
   @InjectMocks
   CreatePersonUseCaseImpl createPersonUseCaseImpl;
 
-  PersonMapper personMapper;
-
-  CreateAddressDTO createAddressDTO;
-  List<CreateAddressDTO> addresses;
-  List<CreateAddressDTO> addressesDTO;
   CreatePersonDTO createPersonDTO;
-  UpdatePersonDTO updatePersonDTO;
- 
+  CreateAddressDTO createAddressDTO;
 
   @BeforeEach
   void setup(){
-    addressesDTO = new ArrayList<>();
+    List<CreateAddressDTO> addressesDTO = new ArrayList<>();
     createAddressDTO = new CreateAddressDTO("Test Street", 123, "Test Neighborhood", State.BAHIA, "12345");
     addressesDTO.add(createAddressDTO);
-    createPersonDTO = new CreatePersonDTO("Test name", LocalDate.now(), "02326713036", addressesDTO);
+    createPersonDTO = new CreatePersonDTO("Test name", LocalDate.now(), "10512971501", addressesDTO);
   }
 
-  @DisplayName("Given Person DTO when Save Person should Return Person and addresses")
+  @DisplayName("Given Person Object when Save Person should Return Person and addresses")
   @Test
-  void testGivenPersonDTO_WhenSavePerson_ShouldReturnPersonAndAddresses() {
-    Person person = new Person("Test name", LocalDate.now(), "02326713036", new ArrayList<>());
-  
-    given(personMapper.toPerson(any(CreatePersonDTO.class))).willReturn(person);
+  void testGivenPersonObject_WhenSavePerson_ShouldReturnPersonAndAddresses() {
+    
+    Person person = new Person(createPersonDTO.getName(), createPersonDTO.getBirthDate(), createPersonDTO.getCpf(), new ArrayList<>());
+    Address address = new Address(createAddressDTO.getStreet(), createAddressDTO.getNumber(), createAddressDTO.getNeighborhood(), createAddressDTO.getState(), createAddressDTO.getZipCode(), person);
+    person.getAddresses().add(address);
 
+    given(personMapper.toPerson(createPersonDTO)).willReturn(person);
     given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.empty());
-    given(personRepository.save(any(Person.class))).willAnswer(invocation -> invocation.getArgument(0));
-    given(addressRepository.save(any(Address.class))).willAnswer(invocation -> invocation.getArgument(0));
+    given(personRepository.save(any(Person.class))).willReturn(person);
+    given(addressRepository.save(any(Address.class))).willReturn(address);
 
     Person savedPerson = createPersonUseCaseImpl.execute(createPersonDTO);
 
     assertNotNull(savedPerson);
-    assertEquals("Test name", savedPerson.getName());
+    assertEquals(createPersonDTO.getName(), savedPerson.getName());
     assertFalse(savedPerson.getAddresses().isEmpty());
-  }
-  
-  @DisplayName("Given Person DTO with Existing CPF when Save Person should Throw  InvalidRequestException")
-  @Test
-  void testGivenPersonDTOWithExistingCPF_WhenSavePerson_ShouldThrowInvalidRequestException() {
-    given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(new Person()));
 
-    assertThrows( InvalidRequestException.class, () -> {
+    Address savedAddress = savedPerson.getAddresses().get(0);
+    assertEquals(createAddressDTO.getStreet(), savedAddress.getStreet());
+    assertEquals(createAddressDTO.getNumber(), savedAddress.getNumber());
+    assertEquals(createAddressDTO.getNeighborhood(), savedAddress.getNeighborhood());
+    assertEquals(createAddressDTO.getState(), savedAddress.getState());
+    assertEquals(createAddressDTO.getZipCode(), savedAddress.getZipCode());
+  }
+
+  @DisplayName("Given Person Object with Existing CPF when Save Person should Throw InvalidRequestException")
+  @Test
+  void testGivenPersonObjectWithExistingCPF_WhenSavePerson_ShouldThrowInvalidRequestException() {
+    Person person = new Person(createPersonDTO.getName(), createPersonDTO.getBirthDate(), createPersonDTO.getCpf(), new ArrayList<>());
+
+    given(personMapper.toPerson(createPersonDTO)).willReturn(person);
+    given(personRepository.findPersonByCpf(anyString())).willReturn(Optional.of(person));
+    
+    assertThrows(InvalidRequestException.class, () -> {
       createPersonUseCaseImpl.execute(createPersonDTO);
     });
 
     verify(personRepository, never()).save(any(Person.class));
   }
 }
-

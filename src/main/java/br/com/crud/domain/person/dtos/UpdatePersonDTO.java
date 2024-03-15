@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import br.com.crud.domain.address.dtos.CreateAddressDTO;
+import br.com.crud.domain.address.dtos.UpdateAddressDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +30,6 @@ public class UpdatePersonDTO{
   String cpf;
 
   @Valid
-  private List<CreateAddressDTO> addresses;
+  private List<UpdateAddressDTO> addresses;
 
 }
