@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import br.com.crud.domain.address.dtos.CreateAddressDTO;
 import br.com.crud.domain.address.entity.Address;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
